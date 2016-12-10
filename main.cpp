@@ -44,6 +44,8 @@
  * Includes
  ***********************************************/
 #include <stdio.h>
+#include <ctype.h>
+#include <string.h>
 
 #ifdef WIN32
 // WIN32_LEAN_AND_MEAN: Exclude APIs such as Cryptography, DDE, RPC, Shell, and Windows Sockets.
@@ -58,6 +60,8 @@
 /********************************************//**
  * Defines
  ***********************************************/
+#define STR_APPLICATION_VERSION "1.0.1"
+
 #ifndef uint8_t
 #define uint8_t unsigned char
 #endif
@@ -74,7 +78,7 @@
  * Retrieves the number of milliseconds that have elapsed since the system was started.
  * @return Number in milliseconds.
  */
-uint32_t GetTicks()
+uint32_t get_tick_count()
 {
 #ifdef WIN32
   return ::GetTickCount();
@@ -85,12 +89,119 @@ uint32_t GetTicks()
 #endif
 }
 
+/**
+ * Display help.
+ */
+void help_show()
+{
+  printf("\r\n");
+  printf("owl-benchmark v%s.\r\n\r\n", STR_APPLICATION_VERSION);
+  printf("Usage:\r\n");
+  printf("\towl-benchmark [--memory | --help]\r\n");
+  printf("\r\n");
+}
+
+/**
+ * Benchmark memory speed.
+ */
+void benchmark_memory()
+{
+  printf("Memory speed test:");
+
+  uint32_t memorySize = 10000000; // 10MB
+  
+  uint8_t * pCh1 = new uint8_t[memorySize];
+  uint8_t * pCh2 = new uint8_t[memorySize];
+
+  uint32_t nCnt1 = 0;
+  uint32_t nStart = 0;
+  uint32_t nMilliSecondsTook = 0;
+  double nMBPS = 0;
+
+  int nMB = 1000;
+  int i = 0;
+  int x = 0;
+
+  // WRITE
+  nStart = get_tick_count();
+
+  for(i=0; i<nMB; i++)
+  {
+    for(x=0; x<memorySize; x++)
+    {
+      pCh1[x] = (uint8_t)(nCnt1++) & 0xff;
+    }
+  }
+
+  nMilliSecondsTook = (get_tick_count() - nStart);
+  nMBPS = (double)(nMB*10) / ((double)nMilliSecondsTook / (double)1000);
+
+  printf("\r\n\tWriting 10G of data took %ld s, speed %.3f MB/s", nMilliSecondsTook / 1000, nMBPS);
+
+  
+  // READ
+  nStart = get_tick_count();
+
+  char ch[5];
+  int n = 0;
+  for(i=0; i<nMB; i++)
+  {
+    for(x=0; x<memorySize; x++)
+    {
+      ch[n] = pCh1[x];
+      n = (n + 1)& 3;
+    }
+  }
+
+  nMilliSecondsTook = (get_tick_count() - nStart);
+  nMBPS = (double)(nMB*10) / ((double)nMilliSecondsTook / (double)1000);
+
+  printf("\r\n\tReading 10G of data took %ld s, speed %.3f MB/s", nMilliSecondsTook / 1000, nMBPS);
+
+  
+  // COPY
+  nStart = get_tick_count();
+
+  nMB = 1000;
+
+  for(i=0; i<nMB; i++)
+  {
+    memcpy(pCh2, pCh1, memorySize);
+  }
+
+  nMilliSecondsTook = (get_tick_count() - nStart);
+  nMBPS = (double)(nMB*10) / ((double)nMilliSecondsTook / (double)1000);
+
+  printf("\r\n\tCopy 10G of data took %ld s, speed %.3f MB/s", nMilliSecondsTook / 1000, nMBPS);
+
+  delete [] pCh1;
+  delete [] pCh2;
+
+  printf("\r\nDone.\r\n");
+}
+
 /********************************************//**
  * Main
  ***********************************************/
-int main()
+int main(int argc, char* argv[])
 {
-  printf("Hello World! %ld\r\n", GetTicks());
+  if (argc==2)
+  {
+    char *pCommand = argv[1];
+    
+    if (strcmp(pCommand, "--memory") == 0)
+    {
+      benchmark_memory();
+    }
+    else //if (strcmp(pCommand, "--help") == 0)
+    {
+      help_show();
+    }
+  }
+  else // no arguments || too many arguments
+  {
+    help_show();
+  }
   
   return 0;
 }
