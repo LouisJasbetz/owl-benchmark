@@ -44,6 +44,13 @@ $
     Copy 10G of data took 9 s, speed 1056.078 MB/s
 ```
 
+### Centrino Duo - 1,66Ghz
+```
+    Writing 10G of data took 15 s, speed 634.211 MB/s
+    Reading 10G of data took 19 s, speed 514.060 MB/s
+    Copy 10G of data took 9 s, speed 1107.174 MB/s
+```
+
 ### Raspberry PI 1 Model B
 ```
     Writing 10G of data took 452 s, speed 22.090 MB/s
