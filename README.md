@@ -1,9 +1,36 @@
 # owl-benchmark
 Computer benchmarking application.
 
-## Compiling:
+## Compiling (g++):
 ```
 $ g++ main.cpp -o owl-benchmark
+$ ./owl-benchmark --help
+
+owl-benchmark v1.0.1.
+
+Usage:
+        owl-benchmark [--memory | --help]
+
+$
+```
+
+## Compiling (clang):
+```
+$ clang++ main.cpp -o owl-benchmark
+$ ./owl-benchmark --help
+
+owl-benchmark v1.0.1.
+
+Usage:
+        owl-benchmark [--memory | --help]
+
+$
+```
+
+## Compiling (cmake):
+```
+$ cmake .
+$ make
 $ ./owl-benchmark --help
 
 owl-benchmark v1.0.1.
