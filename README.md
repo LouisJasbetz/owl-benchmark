@@ -58,6 +58,13 @@ $
     Copy 10G of data took 27 s, speed 364.378 MB/s
 ```
 
+### Raspberry PI 3 Model B
+```
+    Writing 10G of data took 125 s, speed 79.673 MB/s
+    Reading 10G of data took 210 s, speed 47.598 MB/s
+    Copy 10G of data took 8 s, speed 1169.727 MB/s
+```
+
 ### Intel i5-2500K - 3.3 GHz
 ```
     Writing 10G of data took 5 s, speed 1695.778 MB/s
